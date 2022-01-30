@@ -4,26 +4,19 @@ import Button from "../UI/Button";
 
 import classes from "./AddUser.module.css";
 
-const AddUser = () => {
-  const [users, setUsers] = useState([]);
+const AddUser = (props) => {
   const [enteredName, setEnteredName] = useState("");
   const [enteredAge, setEnteredAge] = useState("");
 
   const addUserHandler = (event) => {
-    if(enteredName.trim().length === 0 || enteredAge.trim().length === 0){
-      return 
+    if (enteredName.trim().length === 0 || enteredAge.trim().length === 0) {
+      return;
     }
-    if (+enteredAge <1){
-      return 
+    if (+enteredAge < 1) {
+      return;
     }
-    setUsers((prevState) => [
-      {
-        name: enteredName,
-        age: enteredAge,
-      },
-      ...prevState,
-    ]);
 
+    props.onAddUser(enteredName, enteredAge);
     setEnteredName("");
     setEnteredAge("");
 
