@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import ErrorModal from "../UI/ErrorModal";
@@ -6,12 +6,18 @@ import ErrorModal from "../UI/ErrorModal";
 import classes from "./AddUser.module.css";
 
 const AddUser = (props) => {
-  const [enteredName, setEnteredName] = useState("");
-  const [enteredAge, setEnteredAge] = useState("");
-  const [error, setError] = useState("");
+  const nameInputRef = useRef()
+  const ageInputRef = useRef()
 
+
+  const [error, setError] = useState("");
+  
   const addUserHandler = (event) => {
     event.preventDefault();
+    
+    const enteredName = nameInputRef.current.value
+    const enteredAge = ageInputRef.current.value
+
     if (enteredName.trim().length === 0 || enteredAge.trim().length === 0) {
       setError({
         title: "Invalid input!",
@@ -28,15 +34,10 @@ const AddUser = (props) => {
     }
 
     props.onAddUser(enteredName, enteredAge);
-    setEnteredName("");
-    setEnteredAge("");
-  };
-
-  const userChangeHandler = (event) => {
-    setEnteredName(event.target.value);
-  };
-  const ageChangeHandler = (event) => {
-    setEnteredAge(event.target.value);
+    //You typcally should not manipulate DOM manually instead of manipulating by react.
+    //But here it is okay.
+    nameInputRef.current.value = ""
+    ageInputRef.current.value = ""
   };
 
   const errorHandler = () => {
@@ -58,15 +59,13 @@ const AddUser = (props) => {
           <input
             id="username"
             type="text"
-            value={enteredName}
-            onChange={userChangeHandler}
+            ref={nameInputRef}
           ></input>
           <label>Age (Years)</label>
           <input
             id="age"
             type="number"
-            value={enteredAge}
-            onChange={ageChangeHandler}
+            ref={ageInputRef}
           ></input>
           <Button type="submit">Add User</Button>
         </form>
